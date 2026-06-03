@@ -1,3 +1,10 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # Ignore processed datasets
 data/processed/*
 !data/processed/.gitkeep
+
