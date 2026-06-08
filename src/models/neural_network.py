@@ -23,11 +23,11 @@ def build_mlp(input_dim):
     """
     model = Sequential([
         Input(shape=(input_dim,)),
-        Dense(32, activation='relu'),
-        #Dropout(0.3),
+        Dense(256, activation='relu'),
+        Dropout(0.3),
+        Dense(128, activation='relu'),
+        Dropout(0.2),
         Dense(16, activation='relu'),
-        #Dropout(0.2),
-        Dense(8, activation='relu'),
         Dense(1, activation='sigmoid')
     ])
 

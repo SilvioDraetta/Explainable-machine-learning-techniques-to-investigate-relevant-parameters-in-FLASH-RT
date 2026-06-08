@@ -1,9 +1,23 @@
-import numpy as np
+import sys
+from pathlib import Path
 
-def transform_prezado(df, NTSS_threshold=3.5):
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.utils.io import load_excel, save_excel
+import pandas as pd
+import numpy as np
+from src.preprocessing.encode_features import encode_target
+from src.preprocessing.scale_data import scale_dataset
+from src.preprocessing.augment_data import augment_dataset
+
+df = load_excel("data/raw/electrons-protons/PREZADO-MICE-FLASH-INVIVO-NORMAL.xlsx")
+
+def transform_prezado_only(df):
     """
     Transform the PREZADO dataset by extracting relevant columns and computing
-    derived features needed for the unified dataset.
+    derived features needed for using only the Prezado dataset.
 
     Args:
         df (pandas.DataFrame): (selected) Raw PREZADO dataset loaded from Excel.
@@ -24,11 +38,10 @@ def transform_prezado(df, NTSS_threshold=3.5):
     TD = arrays["Total Dose (Gy)"]
     Duration = arrays["Total Duration (s)"]
     Rad_type = arrays["Rad. Type"]
-    Target = arrays["Biological Target"]
+    Target = encode_target(arrays["Biological Target"])
     NTSS = arrays["NTSS"]
 
     new_Rad_type = np.where(Rad_type == "Electrons", 1, 0)
-    new_NTSS = np.where(NTSS < NTSS_threshold, 1, 0)
 
     return {
         "Title": Title,
@@ -41,5 +54,21 @@ def transform_prezado(df, NTSS_threshold=3.5):
         "Time": Duration,
         "Particle": new_Rad_type,
         "Target": Target,
-        "Endpoint": new_NTSS
+        "Endpoint": NTSS
     }
+
+transformed_data = transform_prezado_only(df)
+
+# Convert dict to DataFrame
+transformed_df = pd.DataFrame(transformed_data)
+
+transformed_df = transformed_df.replace("-", np.nan)
+
+# Scale
+scaled_data = scale_dataset(transformed_df)
+
+# Augment
+augmented_data = augment_dataset(scaled_data, num_variants=4)
+
+# Save
+save_excel(augmented_data, "data/processed/processed_elec-prot/prezado_only.xlsx")

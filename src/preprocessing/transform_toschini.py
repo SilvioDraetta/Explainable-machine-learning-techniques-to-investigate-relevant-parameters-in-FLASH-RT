@@ -1,6 +1,6 @@
 import numpy as np
 
-def transform_toschini(df):
+def transform_toschini(df, crypt_threshold=50):
     """
     Transform the TOSCHINI dataset by extracting relevant columns, computing
     derived features, and formatting them to match the unified dataset structure.
@@ -26,7 +26,7 @@ def transform_toschini(df):
     particle = arrays["particle"]
     crypt = arrays["%crypt"]
 
-    new_crypt = np.where(crypt < 50, 1, 0)
+    new_crypt = np.where(crypt < crypt_threshold, 1, 0)
     target = np.full(len(particle), "Mice intestine")
 
     TD = (maxdose + mindose) / 2
