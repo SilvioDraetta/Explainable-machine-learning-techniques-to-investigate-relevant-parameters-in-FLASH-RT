@@ -10,7 +10,7 @@ from src.preprocessing.split_data import split_dataset_grouped
 
 df = load_excel("data/processed/processed_elec-prot/elec-prot.xlsx")
 
-df_train, df_val = split_dataset_grouped(df, seed=11)
+df_train, df_val = split_dataset_grouped(df, seed=42)
 
 save_excel(df_train, "data/processed/processed_elec-prot/elec-prot_training.xlsx")
 save_excel(df_val, "data/processed/processed_elec-prot/elec-prot_test.xlsx")

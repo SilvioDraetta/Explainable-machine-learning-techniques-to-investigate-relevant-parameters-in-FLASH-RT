@@ -3,6 +3,10 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold, cross_validate
 
+"""
+FUNCTION FOR STANDARD STRATIFIED K-FOLD CROSS-VALIDATION
+"""
+
 def cross_validate_model(model, X_train, y_train, folds=5, seed=8):
     """
     Perform stratified cross-validation on the training set.
@@ -36,6 +40,9 @@ def cross_validate_model(model, X_train, y_train, folds=5, seed=8):
         "acc_std": results["test_accuracy"].std()
     }
 
+""" 
+FUNCTIONs FOR STRATIFIED GROUP K-FOLD CROSS-VALIDATION (GROUPS = TITLES)
+"""
 
 def extract_base_title(title):
     """
@@ -128,5 +135,6 @@ def cross_validate_grouped_stratified(model, X, y, titles, folds=5, seed=8):
         "acc_mean": results["test_accuracy"].mean(),
         "acc_std": results["test_accuracy"].std()
     }
+
 
 

@@ -140,6 +140,24 @@ def grouped_permutation_importance(model, X, y, titles, folds=5, n_repeats=30, p
 
     return df_imp
 
+def plot_feature_distributions(X, y, groups, sgkf, features):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
+    for fold_idx, (train_idx, test_idx) in enumerate(sgkf.split(X, y, groups)):
+        X_train_fold = X.iloc[train_idx]
+        X_test_fold = X.iloc[test_idx]
 
+        print(f"\n=== Plotting distributions for Fold {fold_idx + 1} ===")
 
+        for feature in features:
+            plt.figure(figsize=(10, 5))
+            sns.kdeplot(X_train_fold[feature], label="Train", fill=True, alpha=0.5)
+            sns.kdeplot(X_test_fold[feature], label="Test", fill=True, alpha=0.5)
+
+            plt.title(f"Fold {fold_idx + 1} – Distribution of {feature}")
+            plt.xlabel(feature)
+            plt.ylabel("Density")
+            plt.legend()
+            plt.tight_layout()
+            plt.show()
